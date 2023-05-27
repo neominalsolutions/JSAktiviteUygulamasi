@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Title</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS v5.2.1 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+
+</head>
+
+<body>
+
+  <main>
+
+    <!-- ZEN CODING -->
+    <!-- form içerisindeyken name alanları üzerinden veri okuruz. -->
+    <!-- form içinde arama işlemleri yapılacak ise method tipimizi get olması gerekir -->
+    <!-- form içinden bir değeri gönderip veri tabanına kayıt açma, güncelleme ve silme gibi işlemleri yapacak isek bu durumda post method kullanırız. -->
+    <form method="post" name="AktiviteFormu" onsubmit="submitForm(event)">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="mb-3">
+              <label for="" class="form-label">Aktivite Tanımı</label>
+              <input onchange="aktiviteChange(event)" type="text" class="form-control" name="aktiviteTanimi" id=""
+                aria-describedby="helpId" placeholder="">
+              <small id="helpId" class="form-text text-muted">Help text</small>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="mb-3">
+              <label for="" class="form-label">Başlangıç Saati</label>
+              <input type="time" class="form-control" name="baslangicSaati" id="" aria-describedby="helpId"
+                placeholder="">
+              <small id="helpId" class="form-text text-muted">Help text</small>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="mb-3">
+              <label for="" class="form-label">Bitiş Saati</label>
+              <input type="time" class="form-control" name="bitisSaati" id="" aria-describedby="helpId" placeholder="">
+              <small id="helpId" class="form-text text-muted">Help text</small>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="mb-3">
+              <label for="" class="form-label">Öncelik</label>
+              <select onchange="oncelikSec(event)" class="form-select form-select-lg" name="oncelik" id="">
+                <option value="-1" disabled selected>Öncelik Seçiniz</option>
+                <option value="1">Önemsiz</option>
+                <option value="2">Az Önemli</option>
+                <option value="3">Orta Önemli</option>
+                <option value="4">Önemli</option>
+                <option value="5">Çok Önemli</option>
+              </select>
+              <small id="helpId" class="form-text text-muted">Help text</small>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <!-- form içerisinde form değerlerini göndermek için button tipinin  -->
+            <button onclick="" type="submit" class="btn btn-primary">Ekle</button>
+            <!-- hidden attribute display none yapar. -->
+            <button type="submit" class="btn btn-primary" hidden>Güncelle</button>
+          </div>
+
+        </div>
+      </div>
+      </div>
+    </form>
+
+    <!-- <button id="btnDuzenle"></button> -->
+
+    <!-- bs5-table-default -->
+
+    <div class="table-responsive container mt-2">
+      <table class="table ">
+        <thead class="table-primary">
+          <tr>
+            <th scope="col">Aktivite Ismi</th>
+            <th scope="col">Başlangıç Saati</th>
+            <th scope="col">Bitiş Saati</th>
+            <th scope="col">Öncelik</th>
+            <th scope="col">İşlemler</th>
+          </tr>
+        </thead>
+        <tbody id="tBody">
+
+
+          <!-- <tr>
+            <td>Td-1</td>
+            <td>Td-2</td>
+            <td>Td-3</td>
+            <td>Td-4</td>
+            <td>Td-5</td>
+          </tr> -->
+
+        </tbody>
+      </table>
+    </div>
+
+
+    <script>
+
+
+      function aktiviteChange(event) {
+        console.log('aktiviteSecimi', event)
+      }
+
+      function oncelikSec(event) {
+        console.log('oncelikSec', event)
+      }
+
+      class Aktivite {
+        aktiviteTanimi;
+        baslangicSaati;
+        bitisSaati;
+        oncelik;
+        #id; // private
+
+        // getter ile ulaştık
+        getId() {
+          return this.#id;
+        }
+
+        constructor(aktiviteTanimi, baslangicSaati, bitisSaati, oncelik) {
+          this.#id = Math.round(Math.random() * 100); // set içerde olur setter değerine ihtiyaç yok
+          this.aktiviteTanimi = aktiviteTanimi;
+          this.baslangicSaati = baslangicSaati;
+          this.bitisSaati = bitisSaati;
+          this.oncelik = oncelik;
+        }
+
+
+      }
+
+      let aktiviteler = [];
+
+
+      function submitForm(a) {
+        a.preventDefault(); // sayfa yönlenemesin sadece js ile işlem yapmak için formu durdurduk
+        console.log('event', a);
+        console.log('aktiviteTanimi', AktiviteFormu.aktiviteTanimi.value);
+        console.log('baslangicSaati', AktiviteFormu.baslangicSaati.value);
+        console.log('bitisSaati', AktiviteFormu.bitisSaati.value);
+        console.log('oncelik', AktiviteFormu.oncelik.value);
+
+        const aktivite = new Aktivite(AktiviteFormu.aktiviteTanimi.value, AktiviteFormu.baslangicSaati.value, AktiviteFormu.bitisSaati.value, AktiviteFormu.oncelik.value);
+
+
+
+        // 2.yöntem constructorsız
+        //aktivite.baslangicSaati = AktiviteFormu.aktiviteTanimi.value;
+        //aktivite.bitisSaati = AktiviteFormu.bitisSaati.value;
+        //aktivite.aktiviteTanimi = AktiviteFormu.aktiviteTanimi.value;
+        //aktivite.oncelik = AktiviteFormu.oncelik.value;
+
+
+
+        console.log('aktivite', aktiviteler);
+
+        // const trId = aktiviteler.length + 1;
+        // objenin idsi ile trnin idsi aynı oldu bu durumda tr silerken dizinden objeyi sileceğiz.
+
+        const trId = aktivite.getId();
+        const tr = document.createElement("tr");
+        tr.setAttribute("id", trId);
+
+        const td1 = document.createElement("td");
+        td1.innerText = aktivite.aktiviteTanimi;
+
+        const td2 = document.createElement("td");
+        td2.innerText = aktivite.baslangicSaati;
+
+        const td3 = document.createElement("td");
+        td3.innerText = aktivite.bitisSaati;
+
+        const td4 = document.createElement("td");
+        td4.innerText = aktivite.oncelik;
+
+        const td5 = document.createElement("td");
+
+        // idli yöntem ile click gibi event işlemlerinin yakalanması için elementin en başından beri sayfada olması lazım.
+        td5.innerHTML = '<button id="btnDuzenle" onclick="Duzenle(' + trId + ')"  class="btn btn-primary">Düzenle</button>&nbsp;<button id="btnSil" onclick="Sil(' + trId + ')" class="btn btn-danger">Sil</button>';
+
+
+
+        tr.append(td1);
+        tr.append(td2);
+        tr.append(td3);
+        tr.append(td4);
+        tr.append(td5);
+
+        const tBody = document.getElementById("tBody");
+        tBody.append(tr);
+
+
+        aktiviteler.push(aktivite);
+
+
+      }
+
+
+      // btnDuzenle form submitten sonra çalıştığı için sayfa ilk açıldığında button bulamaz bulamadığından dolayıda onclick eventi tanımlayamıyor. aşağıdaki kodların çalışmamasını sebebi html dinamik olarak element oluşturulması
+      // const btnDuzenle = document.getElementById("btnDuzenle");
+
+      // btnDuzenle.onclick = function () {
+      //   alert('düzenle');
+      // };
+
+      // bu sorunu aşmak için dinamik oluşan elementlerin click eventleri bir function çağırmalıdır.
+
+      function Duzenle(id) {
+        alert('Düzenle' + id);
+
+
+
+      }
+
+      function Sil(id) {
+        alert('Sil' + id);
+        const tr = document.getElementById(id);
+        // const tBody = document.getElementById("tBody");
+        tr.remove();
+
+        console.log('aktiviteler-1', aktiviteler);
+        // silinecek dışındakileri filtereden geçirip 
+        // silinmemiş olanlar.
+        aktiviteler = aktiviteler.filter(x => x.getId() != id);
+        console.log('aktiviteler-2', aktiviteler);
+      }
+
+
+    </script>
+
+  </main>
+
+  <!-- Bootstrap JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+    </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+    </script>
+</body>
+
+</html>
