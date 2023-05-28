@@ -70,6 +70,8 @@
             <button onclick="" type="submit" class="btn btn-primary">Ekle</button>
             <!-- hidden attribute display none yapar. -->
             <button type="submit" class="btn btn-primary" hidden>Güncelle</button>
+
+            <button onclick="SecilenleriSil()" type="button" class="btn btn-danger">Seçilenleri Sil</button>
           </div>
 
         </div>
@@ -81,10 +83,15 @@
 
     <!-- bs5-table-default -->
 
+    <div>
+
+    </div>
+
     <div class="table-responsive container mt-2">
       <table class="table ">
         <thead class="table-primary">
           <tr>
+            <th scope="col">Seçim</th>
             <th scope="col">Aktivite Ismi</th>
             <th scope="col">Başlangıç Saati</th>
             <th scope="col">Bitiş Saati</th>
@@ -93,16 +100,6 @@
           </tr>
         </thead>
         <tbody id="tBody">
-
-
-          <!-- <tr>
-            <td>Td-1</td>
-            <td>Td-2</td>
-            <td>Td-3</td>
-            <td>Td-4</td>
-            <td>Td-5</td>
-          </tr> -->
-
         </tbody>
       </table>
     </div>
@@ -125,6 +122,7 @@
         bitisSaati;
         oncelik;
         #id; // private
+        selected; // false
 
         // getter ile ulaştık
         getId() {
@@ -139,15 +137,23 @@
           this.oncelik = oncelik;
         }
 
+        select() {
+          this.selected = true;
+        }
+
+        unselect() {
+          this.selected = false;
+        }
+
 
       }
 
       let aktiviteler = [];
 
 
-      function submitForm(a) {
-        a.preventDefault(); // sayfa yönlenemesin sadece js ile işlem yapmak için formu durdurduk
-        console.log('event', a);
+      function submitForm(event) {
+        event.preventDefault(); // sayfa yönlenemesin sadece js ile işlem yapmak için formu durdurduk
+        console.log('event', event);
         console.log('aktiviteTanimi', AktiviteFormu.aktiviteTanimi.value);
         console.log('baslangicSaati', AktiviteFormu.baslangicSaati.value);
         console.log('bitisSaati', AktiviteFormu.bitisSaati.value);
@@ -174,6 +180,10 @@
         const tr = document.createElement("tr");
         tr.setAttribute("id", trId);
 
+        const td0 = document.createElement("td");
+        //td1.innerHTML = '<input type="checkbox" name="secim" id="'+trId+'"' />;
+        td0.innerHTML = `<input type="checkbox" onchange="SecVeyaSecimiKaldir(event,id)" name="secim" id="${trId}" />`
+
         const td1 = document.createElement("td");
         td1.innerText = aktivite.aktiviteTanimi;
 
@@ -193,6 +203,8 @@
 
 
 
+        // bir element altına başka bir element atmak için append silmek için remove kullanılır
+        tr.append(td0);
         tr.append(td1);
         tr.append(td2);
         tr.append(td3);
@@ -204,6 +216,9 @@
 
 
         aktiviteler.push(aktivite);
+
+        // form reset işlemi
+        AktiviteFormu.reset();
 
 
       }
@@ -218,9 +233,30 @@
 
       // bu sorunu aşmak için dinamik oluşan elementlerin click eventleri bir function çağırmalıdır.
 
+      function SecVeyaSecimiKaldir(event, id) {
+        console.log('event', event);
+
+        const secimYapilan = aktiviteler.find(x => x.getId() == id);
+
+        if (event.target.checked) { // arayüzde checked olmuş = selected=true;
+          secimYapilan.select();
+        } else {
+          secimYapilan.unselect(); // arayüzde checked kaldırılmış, selected=false
+        }
+
+        console.log('secimYapilan', secimYapilan);
+
+      }
+
       function Duzenle(id) {
         alert('Düzenle' + id);
+        const duzenlenecek = aktiviteler.find(x => x.getId() == id);
+        console.log('duzenlenecek', duzenlenecek)
 
+        AktiviteFormu.aktiviteTanimi.value = duzenlenecek.aktiviteTanimi;
+        AktiviteFormu.baslangicSaati.value = duzenlenecek.baslangicSaati;
+        AktiviteFormu.bitisSaati.value = duzenlenecek.bitisSaati;
+        AktiviteFormu.oncelik.value = duzenlenecek.oncelik;
 
 
       }
@@ -238,6 +274,22 @@
         console.log('aktiviteler-2', aktiviteler);
       }
 
+
+      function SecilenleriSil() {
+        const secilenler = aktiviteler.filter(x => x.selected == true);
+        console.log('secilenler', secilenler);
+
+        // onay mesajı JBOM
+        const onay = confirm("Silmek istedişğinize emin misiniz?")
+
+        if (onay == true) {
+          // silme işlemi
+        }
+        else {
+          // evet hayıt butonu yok sadece mesaj verir.
+          alert("Silme işlemi geri alındı")
+        }
+      }
 
     </script>
 
