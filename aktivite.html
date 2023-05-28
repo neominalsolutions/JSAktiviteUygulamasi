@@ -122,7 +122,7 @@
         bitisSaati;
         oncelik;
         #id; // private
-        selected; // false
+        selected = false; // undefined gelmesin default diziye eklerken false olarak eklensin diye böyle yaptık
 
         // getter ile ulaştık
         getId() {
@@ -238,8 +238,9 @@
 
         const secimYapilan = aktiviteler.find(x => x.getId() == id);
 
+        // checkbox çeklenmiş ise kendi objemi selected olarak işaretleyelim.
         if (event.target.checked) { // arayüzde checked olmuş = selected=true;
-          secimYapilan.select();
+          secimYapilan.select(); 
         } else {
           secimYapilan.unselect(); // arayüzde checked kaldırılmış, selected=false
         }
@@ -274,16 +275,27 @@
         console.log('aktiviteler-2', aktiviteler);
       }
 
-
       function SecilenleriSil() {
         const secilenler = aktiviteler.filter(x => x.selected == true);
         console.log('secilenler', secilenler);
-
         // onay mesajı JBOM
         const onay = confirm("Silmek istedişğinize emin misiniz?")
 
         if (onay == true) {
+          // seçilenler silindi, seçilmeyelere göre filterelersek seçimde silinler diziden filtrelenmiş olur.
+          aktiviteler = aktiviteler.filter(x => x.selected == false);
           // silme işlemi
+
+          // secilenler.forEach(secilen => {
+          //   const element = document.getElementById(secilen.getId());
+          //   element.remove();
+          // })
+
+          for (const secilen of secilenler) {
+            const element = document.getElementById(secilen.getId());
+            element.remove();
+          }
+
         }
         else {
           // evet hayıt butonu yok sadece mesaj verir.
